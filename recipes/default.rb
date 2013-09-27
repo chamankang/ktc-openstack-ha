@@ -54,7 +54,7 @@ endpoints.each do |ep|
     vs_listen_port ep.port.to_s
     # TODO: Add this to endpoint data ?
     lb_algo  "rr"
-    lb_kind  "nat"
+    lb_kind  "dr"
     vs_protocol ep.proto
     real_servers lb_service.members.map { |m| m.to_hash }
   end
