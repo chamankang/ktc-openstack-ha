@@ -35,7 +35,7 @@ end
 
 # make KTC::Vips.vips to have only mysql's vip, so does vrrp instance, too.
 KTC::Vips.vips = vips
- 
+
 #
 # setup a VRRP instance on public int
 #  right now we aren't using any other int
@@ -43,7 +43,8 @@ KTC::Vips.vips = vips
 #  and build there
 keepalived_vrrp "mysql" do
   interface KTC::Network.if_lookup "private"
-  virtual_router_id "1#{KTC::Network.last_octet(KTC::Network.address "private")}".to_i
+  # virtual_router_id must be between 1 & 255
+  virtual_router_id KTC::Network.last_octet(KTC::Network.address "private")
   virtual_ipaddress KTC::Vips.addresses "public"
 end
 
@@ -57,7 +58,7 @@ endpoints.each do |ep|
     vs_listen_port ep.port.to_s
     # TODO: Add this to endpoint data ?
     # Use Source Hashing Scheduling for mysql
-    lb_algo  "sh"
+    lb_algo  "rr"
     lb_kind  "dr"
     vs_protocol ep.proto
     real_servers lb_service.members.map { |m| m.to_hash }
