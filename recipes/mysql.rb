@@ -43,7 +43,7 @@ KTC::Vips.vips = vips
 #  and build there
 keepalived_vrrp "mysql" do
   interface KTC::Network.if_lookup "private"
-  virtual_router_id KTC::Network.last_octet(KTC::Network.address "private")
+  virtual_router_id "1#{KTC::Network.last_octet(KTC::Network.address "private")}".to_i
   virtual_ipaddress KTC::Vips.addresses "public"
 end
 
@@ -58,7 +58,7 @@ endpoints.each do |ep|
     # TODO: Add this to endpoint data ?
     # Use Source Hashing Scheduling for mysql
     lb_algo  "sh"
-    lb_kind  "nat"
+    lb_kind  "dr"
     vs_protocol ep.proto
     real_servers lb_service.members.map { |m| m.to_hash }
   end
