@@ -4,6 +4,7 @@ return unless chef_environment == "dev"
 include_attribute "ktc-openstack-ha::default"
 
 default[:vips][:tags] = {
-  api: "10.1.1.3",
-  mysql: "10.1.1.2"
+  api: "10.1.1.111",
+  mysql: "10.1.1.112",
+  rabbitmq: "10.1.1.113",
 }
